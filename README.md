@@ -19,6 +19,23 @@ If you use this workflow in a paper, don't forget to give credits to the authors
 1. Create a new github repository using this workflow [as a template](https://help.github.com/en/articles/creating-a-repository-from-a-template).
 2. [Clone](https://help.github.com/en/articles/cloning-a-repository) the newly created repository to your local system, into the place where you want to perform the data analysis.
 
+### Step 1b: Set up input files
+
+Create a `data/` subdirectory and enter it i.e., `cd data/`
+
+Download input files from the [1k PBMCs from a Healthy Donor - Gene Expression and Cell Surface Protein](https://support.10xgenomics.com/single-cell-gene-expression/datasets/3.0.0/pbmc_1k_protein_v3) 10x dataset
+
+    # FASTQs
+    wget -nv http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_1k_protein_v3/pbmc_1k_protein_v3_fastqs.tar
+    # Feature Reference CSV
+    wget -nv http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_1k_protein_v3/pbmc_1k_protein_v3_feature_ref.csv
+    # Library CSV
+    wget -nv http://cf.10xgenomics.com/samples/cell-exp/3.0.0/pbmc_1k_protein_v3/pbmc_1k_protein_v3_library.csv
+    
+Decompress the archive of FASTQ files.
+
+    tar xvzf pbmc_1k_protein_v3_fastqs.tar
+
 ### Step 2: Configure workflow
 
 Configure the workflow according to your needs via editing the files in the `config/` folder. Adjust `config.yaml` to configure the workflow execution, and `samples.tsv` to specify your sample setup.
@@ -32,6 +49,10 @@ Install Snakemake using [conda](https://conda.io/projects/conda/en/latest/user-g
 For installation details, see the [instructions in the Snakemake documentation](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html).
 
 ### Step 4: Execute workflow
+
+Make sure `cellranger` is on your `PATH`
+
+    which cellranger
 
 Activate the conda environment:
 

@@ -1,18 +1,60 @@
 # The main entry point of your workflow.
 # After configuring, running snakemake -n in a clone of this repository should successfully execute a dry-run of the workflow.
 
+import pandas as pd
 
-report: "report/workflow.rst"
+configfile: "config/config.yaml"
+
+localrules: all, all_cellranger_count
+
+#report: "report/workflow.rst"
 
 # Allow users to fix the underlying OS via singularity.
-singularity: "docker://continuumio/miniconda3"
+#singularity: "docker://continuumio/miniconda3"
 
+samples = pd.read_table(config["samples"]).set_index("sample", drop=False)
 
 rule all:
     input:
         # The first rule should define the default target files
         # Subsequent target rules can be specified below. They should start with all_*.
+        "results/cellranger_count/.done"
+
+rule cellranger_count:
+    input:
+        library=expand("data/{sample}_library.csv", sample=samples['sample']),
+        feature_ref=expand("data/{sample}_library.csv", sample=samples['sample'])
+    output:
+        directory("results/cellranger_count/{sample}")
+    params:
+        transcriptome=config['cellranger']['transcriptome'],
+        expect_cells=lambda wildcards, input: samples['expect_cells'][wildcards.sample],
+        memory_gb=config['cellranger']['memory_gb'],
+        threads=config['cellranger']['threads']
+    threads: config['cellranger']['threads']
+    resources:
+        mem_mb=config['cellranger']['memory_gb'] * 1024
+    shell:
+        """
+        cellranger count --id={wildcards.sample} \
+        --libraries={input.library} \
+        --transcriptome={params.transcriptome} \
+        --feature-ref={input.feature_ref} \
+        --expect-cells={params.expect_cells} \
+        --jobmode=local \
+        --localcores={params.threads} \
+        --localmem={params.memory_gb} &&
+        mv {wildcards.sample} {output}
+        """
 
 
-include: "rules/common.smk"
-include: "rules/other.smk"
+rule all_cellranger_count:
+    input:
+        expand("results/cellranger_count/{sample}", sample=samples['sample'])
+    output:
+        "results/cellranger_count/.done"
+    shell:
+        "touch {output}"
+
+#include: "rules/common.smk"
+#include: "rules/other.smk"

@@ -1,3 +1,2 @@
-sample	condition
-A	untreated
-B	treated
+sample	expect_cells
+pbmc_1k_protein_v3	1000

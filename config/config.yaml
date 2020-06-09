@@ -2,3 +2,12 @@
 # In case of sample based data, it should be complemented by a samples.tsv file that contains
 # one row per sample. It can be parsed easily via pandas.
 samples: "config/samples.tsv"
+
+cellranger:
+    # Path of folder containing 10x-compatible reference (--transcriptome)
+    transcriptome: "/ifs/mirror/10xgenomics/refdata-cellranger-GRCh38-3.0.0"
+    # Expected number of recovered cells (--expect-cells)
+    expect_cells: 1000
+    # misc
+    threads: 24
+    memory_gb: 256
