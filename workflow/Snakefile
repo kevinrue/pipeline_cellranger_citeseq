@@ -23,7 +23,7 @@ rule all:
 rule cellranger_count:
     input:
         library=expand("data/{sample}_library.csv", sample=samples['sample']),
-        feature_ref=expand("data/{sample}_library.csv", sample=samples['sample'])
+        feature_ref=expand("data/{sample}_feature_ref.csv", sample=samples['sample'])
     output:
         directory("results/cellranger_count/{sample}")
     params:
@@ -34,6 +34,7 @@ rule cellranger_count:
     threads: config['cellranger']['threads']
     resources:
         mem_mb=config['cellranger']['memory_gb'] * 1024
+    log: stderr="results/logs/cellranger_count_{sample}.log"
     shell:
         """
         cellranger count --id={wildcards.sample} \
@@ -43,7 +44,8 @@ rule cellranger_count:
         --expect-cells={params.expect_cells} \
         --jobmode=local \
         --localcores={params.threads} \
-        --localmem={params.memory_gb} &&
+        --localmem={params.memory_gb} \
+        2> {log.stderr} &&
         mv {wildcards.sample} {output}
         """
 
