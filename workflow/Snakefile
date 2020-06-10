@@ -5,7 +5,7 @@ import pandas as pd
 
 configfile: "config/config.yaml"
 
-localrules: all, all_cellranger_count
+localrules: all
 
 #report: "report/workflow.rst"
 
@@ -18,7 +18,7 @@ rule all:
     input:
         # The first rule should define the default target files
         # Subsequent target rules can be specified below. They should start with all_*.
-        "results/cellranger_count/.done"
+        expand("results/cellranger_count/{sample}", sample=samples['sample'])
 
 rule cellranger_count:
     input:
@@ -48,15 +48,6 @@ rule cellranger_count:
         2> {log.stderr} &&
         mv {wildcards.sample} {output}
         """
-
-
-rule all_cellranger_count:
-    input:
-        expand("results/cellranger_count/{sample}", sample=samples['sample'])
-    output:
-        "results/cellranger_count/.done"
-    shell:
-        "touch {output}"
 
 #include: "rules/common.smk"
 #include: "rules/other.smk"

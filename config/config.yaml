@@ -10,4 +10,4 @@ cellranger:
     expect_cells: 1000
     # misc
     threads: 24
-    memory_gb: 256
+    memory_gb: 8
