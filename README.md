@@ -1,4 +1,4 @@
-# Snakemake workflow: pipeline_cellranger_citeseq
+# Snakemake workflow: CellRanger CITE-seq
 
 [![Snakemake](https://img.shields.io/badge/snakemake-≥5.7.0-brightgreen.svg)](https://snakemake.bitbucket.io)
 [![Build Status](https://travis-ci.org/snakemake-workflows/pipeline_cellranger_citeseq.svg?branch=master)](https://travis-ci.org/snakemake-workflows/pipeline_cellranger_citeseq)
